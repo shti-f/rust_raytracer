@@ -1,5 +1,5 @@
 use chrono::Utc;
-use std::path::Path;
+use std::path::PathBuf;
 
 use renderer::vec3;
 use renderer::img;
@@ -15,6 +15,8 @@ fn main() {
 
     // Save the image as "*datetime*.png"
     let datetime = Utc::now().format("%Y_%m%d_%H%M%S").to_string();
-    let path = Path::new("./imgs/").join(format!("{}{}", datetime, ".png"));
+    let mut path = PathBuf::new();
+    path.push("./imgs/");
+    path.push(format!("{}{}", datetime, ".png"));
     output.save_img(&path);
 }
