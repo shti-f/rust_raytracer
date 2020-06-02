@@ -1,3 +1,5 @@
+use super::camera::Camera;
+use super::sphere::Sphere;
 use super::vec3::Vec3;
 use image;
 use rayon::prelude::*;
@@ -23,9 +25,9 @@ impl Img {
         self.data[idx] = v;
     }
 
-    pub fn get(&self, x: usize, y: usize) -> Vec3 {
+    pub fn get(&self, x: usize, y: usize) -> &Vec3 {
         let idx = y * self.width + x;
-        self.data[idx]
+        &self.data[idx]
     }
 
     pub fn update_each(&mut self, f: fn(x: usize, y: usize) -> Vec3) {
@@ -45,6 +47,20 @@ impl Img {
         self.data = par_iter.collect();
     }
 
+    pub fn parallel_update_each_with_camera_scene(
+        &mut self,
+        f: fn(x: usize, y: usize, cam: &Camera, scene: &Vec<Sphere>) -> Vec3,
+        cam: &Camera,
+        scene: &Vec<Sphere>,
+    ) {
+        let par_iter = self.data.par_iter().enumerate().map(|(i, _pixel)| {
+            let x = i / self.width;
+            let y = i % self.height;
+            f(x, y, cam, scene)
+        });
+        self.data = par_iter.collect();
+    }
+
     pub fn do_each(&self, f: fn(x: usize, y: usize)) {
         for i in 0..(self.width * self.height) {
             let x = i / self.width;
@@ -52,7 +68,9 @@ impl Img {
             f(x, y);
         }
     }
+}
 
+impl Img {
     pub fn save_img(&self, path: &PathBuf) {
         let mut imgbuf = image::ImageBuffer::new(self.width as u32, self.height as u32);
         for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {

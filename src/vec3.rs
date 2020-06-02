@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::{Add, Sub, Neg, Mul, Div};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Clone, Copy)]
 pub struct Vec3 {
@@ -12,11 +12,7 @@ impl Add for Vec3 {
     type Output = Vec3;
 
     fn add(self, other: Vec3) -> Vec3 {
-        Vec3::new(
-            self.x + other.x,
-            self.y + other.y,
-            self.z + other.z,
-        )
+        Vec3::new(self.x + other.x, self.y + other.y, self.z + other.z)
     }
 }
 
@@ -24,7 +20,7 @@ impl Neg for Vec3 {
     type Output = Vec3;
 
     fn neg(self) -> Vec3 {
-        Vec3::new( -self.x, -self.y, -self.z )
+        Vec3::new(-self.x, -self.y, -self.z)
     }
 }
 
@@ -40,11 +36,7 @@ impl Mul<f64> for Vec3 {
     type Output = Vec3;
 
     fn mul(self, other: f64) -> Vec3 {
-        Vec3::new(
-            self.x * other,
-            self.y * other,
-            self.z * other,
-        )
+        Vec3::new(self.x * other, self.y * other, self.z * other)
     }
 }
 
@@ -52,11 +44,7 @@ impl Mul<f64> for &Vec3 {
     type Output = Vec3;
 
     fn mul(self, other: f64) -> Vec3 {
-        Vec3::new(
-            self.x * other,
-            self.y * other,
-            self.z * other,
-        )
+        Vec3::new(self.x * other, self.y * other, self.z * other)
     }
 }
 
@@ -86,7 +74,7 @@ impl Div<f64> for &Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3{ x: x, y: y, z: z }
+        Vec3 { x: x, y: y, z: z }
     }
 
     /// ノルム
